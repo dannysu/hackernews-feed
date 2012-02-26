@@ -1,12 +1,7 @@
 from scrapy.spider import BaseSpider
 from scrapy.selector import HtmlXPathSelector
+from scrapy.http import Request 
 from hackernews.items import HackernewsItem
-from readability.readability import Document
-import urllib
-from pyatom import AtomFeed
-import datetime
-import codecs
-import feedparser
 
 class HackernewsSpider(BaseSpider):
 	name = "hackernews"
@@ -15,14 +10,9 @@ class HackernewsSpider(BaseSpider):
 	start_urls = [
 		"http://news.ycombinator.com/over?points=100"
 	]
-	output_filename = "hackernews100.atom"
-	items = []
+	hn_domain = 'http://news.ycombinator.com'
 
-	def __init__(self, name=None, **kwargs):
-		super(HackernewsSpider, self).__init__(name, **kwargs)
-		self.existing = feedparser.parse(self.output_filename)
-
-	def parseContent(self, response):
+	def parse(self, response):
 		hxs = HtmlXPathSelector(response)
 		links = hxs.select('//td[@class="title"]')
 		subtexts = hxs.select('//td[@class="subtext"]/a')
@@ -52,44 +42,10 @@ class HackernewsSpider(BaseSpider):
 				if a.startswith('item?'):
 					item['comment'] = self.hn_prefix + a
 
-			self.items.append(item)
+			yield item
 
-	def parse(self, response):
-
-		self.parseContent(response)
-
-		# Use Readability to extract article body
-		for item in self.items:
-			found = False
-			for entry in self.existing['entries']:
-				if entry.link == item['link']:
-					item['body'] = entry.content[0].value
-					found = True
-
-			if found:
-				continue
-
-			body = ""
-			if not item['link'].endswith('.pdf'):
-				html = urllib.urlopen(item['link']).read()
-				body = Document(html).summary()
-			item['body'] = '<a href="' + item['comment'] + '">HN Comments</a>' + body
-
-		feed = AtomFeed(
-			title = "Hacker News >100",
-			subtitle = "Hacker News over 100 points",
-			feed_url = "http://dannysu.com/feeds/hackernews100.atom",
-			url = "http://news.ycombinator.com/over?points=100"
-		)
-
-		for item in self.items:
-			feed.add(
-				url = item['link'],
-				title = item['title'],
-				content = item['body'],
-				content_type = "html",
-				updated=datetime.datetime.utcnow()
+		# only parse first 2 pages of news
+		if response.url in self.start_urls and len(links) == len(subtexts) + 1:
+			yield Request(
+				url = self.hn_domain + links[-1].select('.//a/@href')[0].extract()
 			)
-
-		f = codecs.open(self.output_filename, 'w', 'utf-8')
-		f.write(feed.to_string())

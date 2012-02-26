@@ -12,6 +12,5 @@ BOT_VERSION = '1.0'
 SPIDER_MODULES = ['hackernews.spiders']
 NEWSPIDER_MODULE = 'hackernews.spiders'
 USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
+ITEM_PIPELINES = ['hackernews.pipelines.HackernewsPipeline']
 LOG_LEVEL = 'ERROR'
-LOG_STDOUT = True
-LOG_FILE = 'hackernews.log'
