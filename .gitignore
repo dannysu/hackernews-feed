@@ -1,0 +1,4 @@
+*.pyc
+/hackernews.log
+/hackernews100.atom
+/hackernews.sh
