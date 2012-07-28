@@ -24,7 +24,7 @@ class HackernewsPipeline(object):
 		self.feed = AtomFeed(
 			title = "Hacker News >100",
 			subtitle = "Hacker News over 100 points",
-			feed_url = "http://dannysu.com/feeds/hackernews100.atom",
+			feed_url = "http://feeds.dannysu.com/hackernews100.atom",
 			url = "http://news.ycombinator.com/over?points=100"
 		)
 
