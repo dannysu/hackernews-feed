@@ -12,6 +12,7 @@ except Exception:
 import datetime
 from pyatom import AtomFeed
 from flask import Flask
+from flask import Response
 from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -55,7 +56,7 @@ def hn100():
             updated=datetime.datetime.utcnow()
         )
 
-    return feed.to_string()
+    return Response(feed.to_string(), mimetype='application/atom+xml')
 
 @app.route('/update/<offset>')
 def update(offset):
