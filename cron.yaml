@@ -1,0 +1,40 @@
+cron:
+- description: reset database
+  url: /update/0
+  schedule: every day 04:00
+- description: update 1-5
+  url: /update/1
+  schedule: every 2 hours
+- description: update 6-10
+  url: /update/2
+  schedule: every 2 hours
+- description: update 11-15
+  url: /update/3
+  schedule: every 2 hours
+- description: update 16-20
+  url: /update/4
+  schedule: every 2 hours
+- description: update 21-25
+  url: /update/5
+  schedule: every 2 hours
+- description: update 26-30
+  url: /update/6
+  schedule: every 2 hours
+- description: update 31-35
+  url: /update/7
+  schedule: every 2 hours
+- description: update 36-40
+  url: /update/8
+  schedule: every 2 hours
+- description: update 41-45
+  url: /update/9
+  schedule: every 2 hours
+- description: update 46-50
+  url: /update/10
+  schedule: every 2 hours
+- description: update 51-55
+  url: /update/11
+  schedule: every 2 hours
+- description: update 56-60
+  url: /update/12
+  schedule: every 2 hours
