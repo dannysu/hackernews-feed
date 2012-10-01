@@ -66,7 +66,7 @@ def update(offset):
         db.session.commit()
         return ''
 
-    url = "http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=newsyc100&count=60"
+    url = "http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=newsyc100&count=40"
     response = urllib2.urlopen(url)
     encoding = response.headers['content-type'].split('charset=')[-1]
     if encoding == 'text/html':
@@ -74,9 +74,11 @@ def update(offset):
     xml = response.read().decode(encoding)
     tree = ET.ElementTree(ET.fromstring(xml))
 
+    increment = 2
+
     tweets = tree.findall('.//item/title')
-    start_at = (offset - 1) * 5
-    tweets = tweets[start_at:start_at + 5]
+    start_at = (offset - 1) * increment
+    tweets = tweets[start_at:start_at + increment]
     for tweet in tweets:
         title = tweet.text.replace("newsyc100: ", "")
 
@@ -92,7 +94,7 @@ def update(offset):
 
         try:
             response = urllib2.urlopen(link)
-        except HTTPError:
+        except urllib2.HTTPError:
             continue
 
         encoding = response.headers['content-type'].split('charset=')[-1]

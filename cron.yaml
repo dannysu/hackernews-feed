@@ -2,39 +2,60 @@ cron:
 - description: reset database
   url: /update/0
   schedule: every day 09:00
-- description: update 1-5
+- description: update with offset
   url: /update/1
   schedule: every 2 hours
-- description: update 6-10
+- description: update with offset
   url: /update/2
   schedule: every 2 hours
-- description: update 11-15
+- description: update with offset
   url: /update/3
   schedule: every 2 hours
-- description: update 16-20
+- description: update with offset
   url: /update/4
   schedule: every 2 hours
-- description: update 21-25
+- description: update with offset
   url: /update/5
   schedule: every 2 hours
-- description: update 26-30
+- description: update with offset
   url: /update/6
   schedule: every 2 hours
-- description: update 31-35
+- description: update with offset
   url: /update/7
   schedule: every 2 hours
-- description: update 36-40
+- description: update with offset
   url: /update/8
   schedule: every 2 hours
-- description: update 41-45
+- description: update with offset
   url: /update/9
   schedule: every 2 hours
-- description: update 46-50
+- description: update with offset
   url: /update/10
   schedule: every 2 hours
-- description: update 51-55
+- description: update with offset
   url: /update/11
   schedule: every 2 hours
-- description: update 56-60
+- description: update with offset
   url: /update/12
+  schedule: every 2 hours
+- description: update with offset
+  url: /update/13
+  schedule: every 2 hours
+- description: update with offset
+  url: /update/14
+  schedule: every 2 hours
+- description: update with offset
+  url: /update/15
+  schedule: every 2 hours
+- description: update with offset
+  url: /update/16
+  schedule: every 2 hours
+- description: update with offset
+  url: /update/17
+  schedule: every 2 hours
+- description: update with offset
+  url: /update/18
+  schedule: every 2 hours
+- description: update with offset
+  url: /update/19
   schedule: every 2 hours
