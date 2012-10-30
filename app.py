@@ -86,7 +86,9 @@ def update(offset):
         end_link = title.find(")", start_link)
         comment_link = title[start_link+1:end_link]
 
-        start_link = title.find("http")
+        title = title[0:start_link]
+
+        start_link = title.rfind("http")
         end_link = title.find(" ", start_link)
         link = title[start_link:end_link]
 
