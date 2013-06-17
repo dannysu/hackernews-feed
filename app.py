@@ -1,10 +1,8 @@
 import os
 import sys
 import urllib2
-try:
-    import xml.etree.cElementTree as ET
-except ImportError:
-    import xml.etree.ElementTree as ET
+import json
+import base64
 try:
     from readability.readability import Document
 except Exception:
@@ -66,21 +64,28 @@ def update(offset):
         db.session.commit()
         return ''
 
-    url = "http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=newsyc100&count=40"
-    response = urllib2.urlopen(url)
-    encoding = response.headers['content-type'].split('charset=')[-1]
-    if encoding == 'text/html':
-        encoding = 'utf-8'
-    xml = response.read().decode(encoding)
-    tree = ET.ElementTree(ET.fromstring(xml))
+    # Obtain bearer token from Twitter
+    url = "https://api.twitter.com/oauth2/token"
+    consumer_key = os.environ.get('TWITTER_CONSUMER_KEY')
+    consumer_secret = os.environ.get('TWITTER_CONSUMER_SECRET')
+    auth = base64.b64encode(consumer_key + ':' + consumer_secret)
+    request = urllib2.Request(url, "grant_type=client_credentials", {"Authorization": "Basic "+auth})
+    response = urllib2.urlopen(request).read()
+    json_response = json.loads(response)
+    access_token = json_response['access_token']
+
+    # Obtain HN posts >100 pts
+    url = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=newsyc100&count=40"
+    request = urllib2.Request(url, headers={"Authorization": "Bearer "+access_token})
+    response = urllib2.urlopen(request).read()
+    tweets = json.loads(response)
 
     increment = 2
 
-    tweets = tree.findall('.//item/title')
     start_at = (offset - 1) * increment
     tweets = tweets[start_at:start_at + increment]
     for tweet in tweets:
-        title = tweet.text.replace("newsyc100: ", "")
+        title = tweet['text']
 
         start_link = title.rfind("(http")
         end_link = title.find(")", start_link)
