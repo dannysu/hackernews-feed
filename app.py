@@ -3,6 +3,7 @@ import sys
 import urllib2
 import json
 import base64
+import re
 try:
     from readability.readability import Document
 except Exception:
@@ -107,14 +108,17 @@ def update(offset):
         encoding = response.headers['content-type'].split('charset=')[-1]
         if encoding == 'text/html':
             encoding = 'utf-8'
-        html = response.read().decode(encoding)
+        if encoding == 'application/pdf':
+            continue
+        html = response.read().decode(encoding, 'ignore')
 
         if sys.modules.has_key('readability.readability'):
             body = Document(html).summary()
         else:
             body = html
 
-        body = '<a href="' + comment_link + '">HN Comments</a><br>' + body
+        body = body.replace('<html><body>', '<html><body><a href="' + comment_link + '">HN Comments</a><br>')
+        body = body.replace('<body id="readabilityBody">', '')
 
         entry = Entry(link, title, body)
         db.session.add(entry)
