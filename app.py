@@ -46,11 +46,12 @@ def hn100():
     )
 
     entries = Entry.query.all()
+    regex = re.compile(r"HN Comments.*", re.DOTALL)
     for entry in entries:
         feed.add(
             url = entry.link,
             title = entry.title,
-            content = entry.body,
+            content = regex.sub("HN Comments</a></br></body></html>", entry.body),
             content_type = "html",
             updated=datetime.datetime.utcnow()
         )
